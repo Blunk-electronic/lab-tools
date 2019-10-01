@@ -3,7 +3,7 @@ Various tools to access lab equipment such as meters, oscilloscopes, power suppl
 Currently there is only one tool in the collection.
 
 ## HARDCOPY
-This is a shell script that accesses a Tektronix scope and saves the screen in a BMP file.
+This is a shell script that accesses a Tektronix TDS320 scope and saves the screen in a BMP file.
 Please find details in the script itself and the manuals [here](osc/manuals/).
 
 ### Installation
@@ -17,4 +17,18 @@ you want to dump the screen into.
 ```sh
 $ sh hardcopy /dev/ttyUSB0 test.bmp
 ```
+
+If the permissions of 'hardcopy' are set so that it can be executed directly via a command like
+```sh
+$ chmod hardcopy 755
+```
+
+Then the 'sh' can be omitted:
+```sh
+$ hardcopy /dev/ttyUSB0 test.bmp
+```
+
+
+## COLLABORATION
+Your feedback and contributions are highly welcome to extend this collection.
 
