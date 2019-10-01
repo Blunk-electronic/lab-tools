@@ -1,0 +1,97 @@
+#! /bin/bash
+
+version=001
+interface=/dev/ttyUSBS0
+target_file=$1
+file_size_final=38462 #applies if transferred file is bmp formatted
+
+echo "version  :" $version
+echo "interface:" $interface
+echo "file     :" $target_file
+
+kill $(pidof cat) 2>/dev/null # hangup line and kill any cats
+#rm $target_file
+
+#init interface / option "raw" must be turned on
+# 9600 baud
+stty -F $interface 0:4:cbd:8a38:3:1c:7f:15:4:0:1:0:11:13:1a:0:12:f:17:16:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0
+
+# 19200 baud
+#stty -F $interface 0:4:cbe:8a38:3:1c:7f:15:4:0:1:0:11:13:1a:0:12:f:17:16:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0
+
+#which correntsponds to :
+#speed 9600/19200 baud; rows 0; columns 0; line = 0;
+#intr = ^C; quit = ^\; erase = ^?; kill = ^U; eof = ^D; eol = <undef>; eol2 = <undef>; swtch = <undef>; start = ^Q; stop = ^S; susp = ^Z; rprnt = ^R; werase = ^W; lnext = ^V;
+#flush = ^O; min = 1; time = 0;
+#-parenb -parodd cs8 hupcl -cstopb cread clocal -crtscts
+#-ignbrk -brkint -ignpar -parmrk -inpck -istrip -inlcr -igncr -icrnl -ixon -ixoff -iuclc -ixany -imaxbel -iutf8
+#-opost -olcuc -ocrnl onlcr -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0
+#-isig -icanon iexten echo echoe echok -echonl -noflsh -xcase -tostop -echoprt echoctl echoke
+
+sleep 1
+#echo "rs232:baud 19200" > $interface
+
+echo "hardcopy abort..."
+echo "hardcopy abort" > $interface
+sleep 0.5
+echo "clearing spooler..."
+echo "hardcopy clearspool" > $interface
+sleep 0.5
+echo "clearing menu..."
+echo "clearmenu" > $interface
+sleep 0.5
+echo "starting hardcopy..."
+echo "HARDCopy start" > $interface
+
+cat $interface > $target_file & # run the actual transfer in the background
+sleep 2
+
+echo "receiving image... "
+file_size_current=$(stat -c%s $target_file)
+file_size_last=0
+
+while [ "$file_size_current" -lt "$file_size_final" ]
+ do
+   file_size_current=$(stat -c%s $target_file)
+   echo -n -e "\r$file_size_current of $file_size_final bytes"
+   sleep 2
+   
+   [ "$file_size_current" -eq "$file_size_last" ] &&
+     {
+     echo
+     echo "timeout"
+     kill $(pidof cat) 2>/dev/null # hangup line
+     echo
+     rm $target_file   # clean up
+     exit 2
+     }
+   file_size_last=$file_size_current
+ done
+
+echo 
+
+# hang up line
+kill $(pidof cat) 2>/dev/null
+[ $? -ne 0 ] && 
+ {
+ echo "ERROR: Could not kill cat !"
+ exit 1
+ }
+
+# if target file too large remove it and exit
+[ "$file_size_current" -gt "$file_size_final" ] &&
+ {
+ echo "ERROR: target file corrupted ! Try again !"
+ rm $target_file # clean up
+ exit 3
+ }
+ 
+echo "trigger:main:mode auto" > $interface 
+
+# echo "display target file..."
+# kuickshow $target_file
+# [ $? -ne 0 ] && ristretto $target_file 
+
+echo "trigger:main:mode normal" > $interface
+
+exit 0
