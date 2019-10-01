@@ -10,9 +10,11 @@ Please find details in the script itself and the manuals [here](osc/manuals/).
 Just copy the script 'hardcopy' from directory 'osc' to $HOME/bin or somewhere else where your executables live.
 
 ### Usage
-From the command line run this command to dump the current screen of your scope in a bitmap file:
+From the command line run this command to dump the current screen of your scope in a bitmap file.
+The argument right after 'hardcopy' is the interface (such as /dev/ttyS0 or /dev/ttyUSB0). The next argument is the file
+you want to dump the screen into.
 
 ```sh
-$ sh hardcopy test.bmp
+$ sh hardcopy /dev/ttyUSB0 test.bmp
 ```
 
