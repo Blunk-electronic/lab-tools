@@ -4,11 +4,12 @@ Currently there is only one tool in the collection.
 
 ## HARDCOPY
 This is a shell script that accesses a Tektronix scope and saves the screen in a BMP file.
+Please find details in the script itself and the manuals [here](osc/manuals/).
 
 ### Installation
 Just copy the script 'hardcopy' in $HOME/bin or somewhere else where your executables live.
 
-### USAGE
+### Usage
 From the command line run this command to dump the current screen of your scope in a bitmap file:
 
 ```sh

@@ -1,26 +1,26 @@
 #! /bin/bash
 
-version=001
-interface=/dev/ttyUSBS0
-target_file=$1
+version=002
+#interface=/dev/ttyUSBS0
+interface=$1
+target_file=$2
 file_size_final=38462 #applies if transferred file is bmp formatted
 
 echo "version  :" $version
 echo "interface:" $interface
 echo "file     :" $target_file
 
-kill $(pidof cat) 2>/dev/null # hangup line and kill any cats
-#rm $target_file
+kill $(pidof cat) 2>/dev/null # hangup line and kill all cats
 
-#init interface / option "raw" must be turned on
+# init interface / option "raw" must be turned on
 # 9600 baud
 stty -F $interface 0:4:cbd:8a38:3:1c:7f:15:4:0:1:0:11:13:1a:0:12:f:17:16:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0
 
 # 19200 baud
 #stty -F $interface 0:4:cbe:8a38:3:1c:7f:15:4:0:1:0:11:13:1a:0:12:f:17:16:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0
 
-#which correntsponds to :
-#speed 9600/19200 baud; rows 0; columns 0; line = 0;
+# which correntsponds to :
+# speed 9600/19200 baud; rows 0; columns 0; line = 0;
 #intr = ^C; quit = ^\; erase = ^?; kill = ^U; eof = ^D; eol = <undef>; eol2 = <undef>; swtch = <undef>; start = ^Q; stop = ^S; susp = ^Z; rprnt = ^R; werase = ^W; lnext = ^V;
 #flush = ^O; min = 1; time = 0;
 #-parenb -parodd cs8 hupcl -cstopb cread clocal -crtscts
