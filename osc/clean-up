@@ -1,0 +1,5 @@
+#! /bin/bash
+
+rm *.bmp
+
+exit 0
