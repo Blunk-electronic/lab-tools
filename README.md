@@ -9,6 +9,7 @@ connected with your computer via a RS232 cable or an USB-to-RS232 adapter cable.
 
 ### Installation
 Just copy the script 'hardcopy' from directory 'osc' to $HOME/bin or somewhere else where your executables live.
+NOTE: You must be in group 'dialout' !
 
 ### Usage
 From the command line run this command to dump the current screen of your scope in a bitmap file.
